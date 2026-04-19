@@ -22,6 +22,15 @@ import AdminTariffsScreen from "@/components/screens/admin/AdminTariffsScreen";
 
 export type Role = "passenger" | "driver" | "admin";
 
+export interface CarCard {
+  brand: string;
+  model: string;
+  year: string;
+  plate: string;
+  color: string;
+  category: string;
+}
+
 const passengerTabs = [
   { id: "home", icon: "MapPin", label: "Главная" },
   { id: "history", icon: "Clock", label: "Поездки" },
@@ -46,9 +55,11 @@ const adminTabs = [
 const Index = () => {
   const [role, setRole] = useState<Role | null>(null);
   const [activeScreen, setActiveScreen] = useState("home");
+  const [carCard, setCarCard] = useState<CarCard | null>(null);
 
   const handleRoleSelect = (r: Role) => {
     setRole(r);
+    setCarCard(null);
     setActiveScreen(r === "admin" ? "dashboard" : "home");
   };
 
@@ -74,10 +85,10 @@ const Index = () => {
     }
     if (role === "driver") {
       switch (activeScreen) {
-        case "home": return <DriverHomeScreen />;
+        case "home": return <DriverHomeScreen carCard={carCard} onGoToProfile={() => setActiveScreen("profile")} />;
         case "orders": return <DriverOrdersScreen />;
         case "earnings": return <DriverEarningsScreen />;
-        case "profile": return <DriverProfileScreen onBack={handleBack} />;
+        case "profile": return <DriverProfileScreen onBack={handleBack} carCard={carCard} onCarSave={setCarCard} />;
       }
     }
     if (role === "admin") {
