@@ -116,7 +116,7 @@ const Index = () => {
     }
     if (role === "admin") {
       switch (activeScreen) {
-        case "dashboard": return <AdminDashboardScreen />;
+        case "dashboard": return <AdminDashboardScreen onBack={handleBack} />;
         case "drivers": return <AdminDriversScreen />;
         case "orders": return <AdminOrdersScreen />;
         case "tariffs": return <AdminTariffsScreen />;

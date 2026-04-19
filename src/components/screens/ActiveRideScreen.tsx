@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Icon from "@/components/ui/icon";
+import RideToast, { type Toast } from "@/components/RideToast";
 
 interface Props {
   onFinish: () => void;
@@ -7,7 +8,7 @@ interface Props {
 }
 
 const TOTAL_SECONDS = 58 * 60;
-const ARRIVAL_SECONDS = 3 * 60; // время до подачи
+const ARRIVAL_SECONDS = 3 * 60;
 
 type RidePhase = "arriving" | "in_ride" | "done";
 
@@ -17,11 +18,35 @@ const ActiveRideScreen = ({ onFinish, onChat }: Props) => {
   const [rideSecondsLeft, setRideSecondsLeft] = useState(TOTAL_SECONDS);
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+  const [toasts, setToasts] = useState<Toast[]>([]);
+
+  const addToast = useCallback((toast: Omit<Toast, "id">) => {
+    setToasts(prev => [...prev, { ...toast, id: Date.now() }]);
+  }, []);
+
+  const removeToast = useCallback((id: number) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  }, []);
+
+  // Push notifications on phase changes
+  useEffect(() => {
+    addToast({ type: "info", title: "Поездка подтверждена", desc: "Артём Ковалёв едет к вам" });
+  }, []);
+
+  useEffect(() => {
+    if (arrivalSecondsLeft === 30 && phase === "arriving") {
+      addToast({ type: "arrival", title: "Водитель почти прибыл", desc: "Toyota Camry · А123МК197 · ~30 сек" });
+    }
+  }, [arrivalSecondsLeft, phase]);
 
   // Arrival countdown
   useEffect(() => {
     if (phase !== "arriving") return;
-    if (arrivalSecondsLeft <= 0) { setPhase("in_ride"); return; }
+    if (arrivalSecondsLeft <= 0) {
+      setPhase("in_ride");
+      addToast({ type: "started", title: "Поездка началась!", desc: "Маршрут: Тверская → Шереметьево" });
+      return;
+    }
     const t = setTimeout(() => setArrivalSecondsLeft(p => p - 1), 1000);
     return () => clearTimeout(t);
   }, [phase, arrivalSecondsLeft]);
@@ -30,6 +55,9 @@ const ActiveRideScreen = ({ onFinish, onChat }: Props) => {
   useEffect(() => {
     if (phase !== "in_ride") return;
     if (rideSecondsLeft <= 0) { setPhase("done"); return; }
+    if (rideSecondsLeft === 5 * 60) {
+      addToast({ type: "info", title: "До прибытия 5 минут", desc: "Аэропорт Шереметьево" });
+    }
     const t = setTimeout(() => setRideSecondsLeft(p => p - 30), 1000);
     return () => clearTimeout(t);
   }, [phase, rideSecondsLeft]);
@@ -61,6 +89,7 @@ const ActiveRideScreen = ({ onFinish, onChat }: Props) => {
   if (phase === "done") {
     return (
       <div className="min-h-screen flex flex-col" style={{ background: "var(--dark-bg)" }}>
+        <RideToast toasts={toasts} onRemove={removeToast} />
         <div className="relative overflow-hidden flex-1 flex flex-col items-center justify-center px-5">
           <div className="absolute inset-0 pointer-events-none"
             style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(168,85,247,0.18) 0%, transparent 70%)" }} />
@@ -140,6 +169,7 @@ const ActiveRideScreen = ({ onFinish, onChat }: Props) => {
   /* ── ARRIVING / IN_RIDE phase ── */
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--dark-bg)" }}>
+      <RideToast toasts={toasts} onRemove={removeToast} />
 
       {/* Map area */}
       <div className="relative overflow-hidden flex-shrink-0" style={{ height: 280 }}>

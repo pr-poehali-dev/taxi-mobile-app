@@ -19,8 +19,8 @@ const HomeScreen = ({ onStartRide }: Props) => {
 
   const rideTypes = [
     { id: "economy", name: "Эконом", price: "от 180 ₽", time: "3 мин", emoji: "🚗" },
-    { id: "comfort", name: "Комфорт", price: "от 320 ₽", time: "5 мин", emoji: "🚙" },
-    { id: "business", name: "Бизнес", price: "от 580 ₽", time: "8 мин", emoji: "🚘" },
+    { id: "delivery", name: "Доставка", price: "от 250 ₽", time: "5 мин", emoji: "📦" },
+    { id: "cargo", name: "Грузовой", price: "от 600 ₽", time: "10 мин", emoji: "🚛" },
   ];
 
   const [selectedRide, setSelectedRide] = useState("economy");

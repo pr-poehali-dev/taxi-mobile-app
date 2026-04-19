@@ -245,7 +245,7 @@ const ProfileScreen = ({ onBack }: Props) => {
             style={{ background: "rgba(168,85,247,0.08)", border: "1px solid rgba(168,85,247,0.2)", color: "#d8b4fe" }}
           >
             <Icon name="ArrowLeft" size={15} />
-            Сменить профиль
+            Выйти из профиля
           </button>
         )}
         <button

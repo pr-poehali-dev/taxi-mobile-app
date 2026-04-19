@@ -1,5 +1,9 @@
 import Icon from "@/components/ui/icon";
 
+interface Props {
+  onBack: () => void;
+}
+
 const activeOrders = [
   { id: "#4521", passenger: "Алексей С.", driver: "Артём К.", from: "Тверская, 18", to: "Шереметьево", status: "in_ride", price: 1240 },
   { id: "#4522", passenger: "Мария В.", driver: "Иван Р.", from: "Арбат, 5", to: "Сокольники", status: "waiting", price: 420 },
@@ -12,7 +16,7 @@ const statusMeta: Record<string, { label: string; color: string; bg: string }> =
   searching: { label: "Поиск", color: "#00d4ff", bg: "rgba(0,212,255,0.1)" },
 };
 
-const AdminDashboardScreen = () => {
+const AdminDashboardScreen = ({ onBack }: Props) => {
   return (
     <div className="min-h-screen" style={{ background: "var(--dark-bg)" }}>
       {/* Header */}
@@ -129,6 +133,20 @@ const AdminDashboardScreen = () => {
             <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.25)" }}>23:00</span>
           </div>
         </div>
+      </div>
+
+      {/* Exit */}
+      <div className="px-5 mb-6 space-y-3">
+        <button onClick={onBack}
+          className="w-full py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95 flex items-center justify-center gap-2"
+          style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.2)", color: "#fbbf24" }}>
+          <Icon name="ArrowLeft" size={15} />
+          Выйти из профиля
+        </button>
+        <button className="w-full py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95"
+          style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171" }}>
+          Выйти из аккаунта
+        </button>
       </div>
     </div>
   );

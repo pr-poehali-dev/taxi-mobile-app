@@ -296,7 +296,7 @@ const DriverProfileScreen = ({ onBack, carCard, onCarSave }: Props) => {
           className="w-full py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95 flex items-center justify-center gap-2"
           style={{ background: "rgba(0,212,255,0.08)", border: "1px solid rgba(0,212,255,0.2)", color: "#7dd3fc" }}>
           <Icon name="ArrowLeft" size={15} />
-          Сменить профиль
+          Выйти из профиля
         </button>
         <button className="w-full py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95"
           style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171" }}>
