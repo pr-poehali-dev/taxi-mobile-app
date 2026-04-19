@@ -1,6 +1,10 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 
+interface Props {
+  onBack?: () => void;
+}
+
 const reviews = [
   { id: 1, driver: "Артём К.", rating: 5, text: "Отличный пассажир, всё чётко!", date: "19 апр", avatar: "АК" },
   { id: 2, driver: "Михаил Р.", rating: 5, text: "Вовремя вышел, приятно общаться", date: "18 апр", avatar: "МР" },
@@ -22,7 +26,7 @@ const settings = [
   { icon: "HelpCircle", label: "Поддержка", type: "link" },
 ];
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ onBack }: Props) => {
   const [toggles, setToggles] = useState<Record<string, boolean>>({
     Bell: true,
     MapPin: true,
@@ -233,14 +237,20 @@ const ProfileScreen = () => {
       </div>
 
       {/* Logout */}
-      <div className="px-5 mb-6">
+      <div className="px-5 mb-6 space-y-3">
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="w-full py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95 flex items-center justify-center gap-2"
+            style={{ background: "rgba(168,85,247,0.08)", border: "1px solid rgba(168,85,247,0.2)", color: "#d8b4fe" }}
+          >
+            <Icon name="ArrowLeft" size={15} />
+            Сменить профиль
+          </button>
+        )}
         <button
           className="w-full py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95"
-          style={{
-            background: "rgba(239,68,68,0.08)",
-            border: "1px solid rgba(239,68,68,0.2)",
-            color: "#f87171",
-          }}
+          style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171" }}
         >
           Выйти из аккаунта
         </button>
