@@ -1,6 +1,7 @@
 import { useState } from "react";
 import WelcomeScreen from "@/components/WelcomeScreen";
 import BottomNav from "@/components/BottomNav";
+import ActiveRideScreen from "@/components/screens/ActiveRideScreen";
 
 // Passenger screens
 import HomeScreen from "@/components/screens/HomeScreen";
@@ -56,20 +57,42 @@ const Index = () => {
   const [role, setRole] = useState<Role | null>(null);
   const [activeScreen, setActiveScreen] = useState("home");
   const [carCard, setCarCard] = useState<CarCard | null>(null);
+  const [activeRide, setActiveRide] = useState(false);
 
   const handleRoleSelect = (r: Role) => {
     setRole(r);
     setCarCard(null);
+    setActiveRide(false);
     setActiveScreen(r === "admin" ? "dashboard" : "home");
   };
 
   const handleBack = () => {
     setRole(null);
     setActiveScreen("home");
+    setActiveRide(false);
+  };
+
+  const handleFinishRide = () => {
+    setActiveRide(false);
+    setActiveScreen("history");
+  };
+
+  const handleChatFromRide = () => {
+    setActiveRide(false);
+    setActiveScreen("chat");
   };
 
   if (!role) {
     return <div className="app-container"><WelcomeScreen onSelect={handleRoleSelect} /></div>;
+  }
+
+  // Active ride overlay — fullscreen, hides nav
+  if (activeRide && role === "passenger") {
+    return (
+      <div className="app-container">
+        <ActiveRideScreen onFinish={handleFinishRide} onChat={handleChatFromRide} />
+      </div>
+    );
   }
 
   const tabs = role === "passenger" ? passengerTabs : role === "driver" ? driverTabs : adminTabs;
@@ -77,7 +100,7 @@ const Index = () => {
   const renderScreen = () => {
     if (role === "passenger") {
       switch (activeScreen) {
-        case "home": return <HomeScreen />;
+        case "home": return <HomeScreen onStartRide={() => setActiveRide(true)} />;
         case "history": return <HistoryScreen />;
         case "chat": return <ChatScreen />;
         case "profile": return <ProfileScreen onBack={handleBack} />;
